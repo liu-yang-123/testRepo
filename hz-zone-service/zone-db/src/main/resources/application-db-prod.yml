@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver  
+    #打包地址 
+    url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: ${DATASOURCE_USERNAME:finservice}
+    password: ${DATASOURCE_PASSWORD:Abc.123456}
+    
+  servlet:
+    multipart:
+      max-file-size: 512MB
+      max-request-size: 512MB
+    
+services:
+  filepath: 
+    win: D://data/
+    linux: /home/finservice/hz-zone-data/
+  sendpath: 
+    win: D://data/file/
+    linux: /home/finservice/hz-zone-data/file/
+    
+#导入计划单、回款明细类型对应数据库银行id
+importType:
+  hzicbc: 1
+  rcb: 505
+  bob: 601
+  jdicbc: 614

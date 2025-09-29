@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.TradeClearErrorMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.TradeClearError">
+        <id column="id" property="id" />
+        <result column="department_id" property="departmentId" />
+        <result column="bank_id" property="bankId" />
+        <result column="sub_bank" property="subBank" />
+        <result column="denom_id" property="denomId" />
+        <result column="clear_date" property="clearDate" />
+        <result column="cash_over_count" property="cashOverCount" />
+        <result column="cash_over_amount" property="cashOverAmount" />
+        <result column="cash_short_count" property="cashShortCount" />
+        <result column="cash_short_amount" property="cashShortAmount" />
+        <result column="fake_count" property="fakeCount" />
+        <result column="fake_amount" property="fakeAmount" />
+        <result column="carry_count" property="carryCount" />
+        <result column="carry_amount" property="carryAmount" />
+        <result column="error_man" property="errorMan" />
+        <result column="clear_man" property="clearMan" />
+        <result column="check_man" property="checkMan" />
+        <result column="status" property="status" />
+        <result column="comments" property="comments" />
+        <result column="confirm_time" property="confirmTime" />
+        <result column="confirm_user" property="confirmUser" />
+        <result column="check_comments" property="checkComments" />
+        <result column="cancel_time" property="cancelTime" />
+        <result column="cancel_user" property="cancelUser" />
+        <result column="seal_date" property="sealDate" />
+        <result column="seal_man" property="sealMan" />
+        <result column="create_day" property="createDay" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+</mapper>

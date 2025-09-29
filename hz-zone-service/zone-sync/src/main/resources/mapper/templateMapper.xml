@@ -1,0 +1,16 @@
+<?Mapper version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.sync.mapper.TemplateMapper">
+
+    <!-- 根据表名、过滤条件进行数据查询 -->
+    <select id="select" resultType="java.util.Map">
+        SELECT * FROM ${tableName}
+        <where>
+            <if test="type == 1">
+                ${field} <![CDATA[>=]]> UNIX_TIMESTAMP(CAST(current_timestamp(3) AS DATE) - INTERVAL 1 DAY) *1000
+                AND ${field} <![CDATA[<]]> UNIX_TIMESTAMP(CAST(current_timestamp(3) AS DATE)) *1000
+            </if>
+        </where>
+    </select>
+
+</mapper>

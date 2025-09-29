@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.EmployeeMapper">
+	
+	<!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.Employee">
+        <id column="id" property="id" />
+        <result column="emp_no" property="empNo" />
+        <result column="emp_name" property="empName" />
+        <result column="department_id" property="departmentId" />
+        <result column="job_id" property="jobId" />
+        <result column="title" property="title" />
+        <result column="sex" property="sex" />
+        <result column="idno" property="idno" />
+        <result column="nation" property="nation" />
+        <result column="birthday" property="birthday" />
+        <result column="marriage" property="marriage" />
+        <result column="education" property="education" />
+        <result column="school" property="school" />
+        <result column="politic" property="politic" />
+        <result column="military" property="military" />
+        <result column="idcard_addr" property="idcardAddr" />
+        <result column="idcard_district" property="idcardDistrict" />
+        <result column="idcard_city" property="idcardCity" />
+        <result column="idcard_privince" property="idcardPrivince" />
+        <result column="address" property="address" />
+        <result column="status_t" property="statusT" />
+        <result column="entry_date" property="entryDate" />
+        <result column="quit_date" property="quitDate" />
+        <result column="mobile" property="mobile" />
+        <result column="wx_id" property="wxId" />
+        <result column="wx_openid" property="wxOpenid" />
+        <result column="photo_url" property="photoUrl" />
+        <result column="contact_mobile" property="contactMobile" />
+        <result column="contact_name" property="contactName" />
+        <result column="contact_relationship" property="contactRelationship" />
+        <result column="guarantor_name" property="guarantorName" />
+        <result column="guarantor_mobile" property="guarantorMobile" />
+        <result column="comments" property="comments" />
+        <result column="next_visit_date" property="nextVisitDate" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+    
+	<update id="updateJobType">
+	    update employee set job_type = #{jobType} where job_ids = #{jobId}
+	</update>
+</mapper>

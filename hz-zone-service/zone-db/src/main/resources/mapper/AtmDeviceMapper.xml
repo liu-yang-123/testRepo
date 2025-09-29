@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.AtmDeviceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.AtmDevice">
+        <id column="id" property="id" />
+        <result column="ter_no" property="terNo" />
+        <result column="ter_type" property="terType" />
+        <result column="ter_factory" property="terFactory" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="district" property="district" />
+        <result column="address" property="address" />
+        <result column="location_type" property="locationType" />
+        <result column="status_t" property="statusT" />
+        <result column="bank_id" property="bankId" />
+        <result column="sub_bank_id" property="subBankId" />
+        <result column="comments" property="comments" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 设备总数查询 -->
+    <select id="getTotal" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM `atm_device` AS A LEFT JOIN bank AS B ON A.sub_bank_id = B.id
+        WHERE B.department_id = #{departmentId}
+        <if test="terNo != null and terNo != ''">
+           AND A.ter_no LIKE CONCAT (#{terNo}, '%')
+        </if>
+        ORDER BY B.route_no *1 ASC
+    </select>
+
+    <!-- 设备列表设备、线路数据 -->
+    <select id="getList" resultType="com.zcxd.db.model.result.AtmDeviceRouteResult">
+        SELECT A.id,A.ter_no,B.route_no FROM `atm_device` AS A LEFT JOIN bank AS B ON A.sub_bank_id = B.id
+        WHERE B.department_id = #{departmentId}
+        <if test="terNo != null and terNo != ''">
+           AND A.ter_no LIKE CONCAT (#{terNo}, '%')
+        </if>
+        ORDER BY B.route_no *1 ASC LIMIT #{offset}, #{limit}
+    </select>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.BankTellerMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.BankTeller">
+        <id column="id" property="id" />
+        <result column="bank_id" property="bankId" />
+        <result column="teller_no" property="tellerNo" />
+        <result column="teller_name" property="tellerName" />
+        <result column="mobile" property="mobile" />
+        <result column="status_t" property="statusT" />
+        <result column="comments" property="comments" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 机构、箱包编号查询数据-->
+    <select id="getByTellerNo" resultMap="BaseResultMap">
+        SELECT * FROM `bank_teller` WHERE teller_no = #{tellerNo} AND deleted = 0 AND bank_id = #{bankId}
+        <if test="id != null and id > 0">
+            AND id NOT IN (#{id})
+        </if>
+        LIMIT 1
+    </select>
+</mapper>

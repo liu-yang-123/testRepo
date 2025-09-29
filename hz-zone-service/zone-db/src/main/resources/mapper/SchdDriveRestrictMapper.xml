@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.SchdDriveRestrictMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.SchdDriveRestrict">
+        <id column="id" property="id" />
+        <result column="weekday" property="weekday" />
+        <result column="begin_time_am" property="beginTimeAm" />
+        <result column="end_time_am" property="endTimeAm" />
+        <result column="begin_time_pm" property="beginTimePm" />
+        <result column="end_time_pm" property="endTimePm" />
+        <result column="forbid_numbers" property="forbidNumbers" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+</mapper>

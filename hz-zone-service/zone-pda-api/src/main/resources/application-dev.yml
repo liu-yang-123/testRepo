@@ -1,0 +1,33 @@
+#########注册中心配置#####################
+spring:
+  cloud:
+      nacos:
+        discovery:
+          server-addr: localhost:8848
+logging:
+  config: classpath:logback.xml
+  level:
+    com.zcxd.pda: INFO
+    com.jalja.org.spring: INFO
+    org.springframework.web: INFO
+    org.apache.ibatis: INFO
+    java.sql.PreparedStatement: INFO
+    java.sql.Statement: INFO
+    Java.sql.Connection: ERROR
+    com.codingapi.txlcn: INFO
+    com.alibaba.nacos: error
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+encrypt:
+  aes: 1
+  key: "ZCXDHZZCZHJHMKEY"
+
+#####redis配置
+redis:
+  singleServerConfig:
+    address: "redis://127.0.0.1:6379"
+    password: "zjzcjf"

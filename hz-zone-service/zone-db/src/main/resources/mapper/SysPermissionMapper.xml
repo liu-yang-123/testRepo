@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.SysPermissionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.SysPermission">
+        <id column="id" property="id" />
+        <result column="role_id" property="roleId" />
+        <result column="permission" property="permission" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+    
+     <insert id ="insertBatch" parameterType="java.util.List" >
+           insert into sys_permission
+           (role_id, permission, create_user, create_time, update_user, update_time)
+           values
+            <foreach collection ="sysPermissions" item="sysPermission" separator =",">
+                (
+                #{sysPermission.roleId}, #{sysPermission.permission},
+                #{sysPermission.createUser},#{sysPermission.createTime},
+                #{sysPermission.updateUser}, #{sysPermission.updateTime}
+                )
+            </foreach >
+     </insert >
+</mapper>

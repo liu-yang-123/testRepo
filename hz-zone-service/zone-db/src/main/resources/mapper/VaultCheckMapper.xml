@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.VaultCheckMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.VaultCheck">
+        <id column="id" property="id" />
+        <result column="department_id" property="departmentId" />
+        <result column="bank_id" property="bankId" />
+        <result column="usable_balance" property="usableBalance" />
+        <result column="bad_balance" property="badBalance" />
+        <result column="good_balance" property="goodBalance" />
+        <result column="unclear_balance" property="unclearBalance" />
+        <result column="usable_amount" property="usableAmount" />
+        <result column="bad_amount" property="badAmount" />
+        <result column="good_amount" property="goodAmount" />
+        <result column="unclear_amount" property="unclearAmount" />
+        <result column="comments" property="comments" />
+        <result column="wh_op_man" property="whOpMan" />
+        <result column="wh_check_man" property="whCheckMan" />
+        <result column="wh_confirm_man" property="whConfirmMan" />
+        <result column="wh_op_time" property="whOpTime" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 在时间范围内获取银行每天盘点金额 -->
+    <select id="getBankAmount" resultType="com.zcxd.db.model.result.BankAmountResult">
+        SELECT * FROM
+            ( SELECT bank_id, ( usable_amount + bad_amount + good_amount + unclear_amount ) AS amount, FROM_UNIXTIME( wh_op_time / 1000, '%Y-%m-%d' ) AS `date`
+              FROM `vault_check` WHERE department_id = #{departmentId} AND bank_id = #{bankId} AND wh_op_time >= #{start} AND wh_op_time <![CDATA[ < ]]> #{end} ORDER BY wh_op_time DESC
+            ) AS A GROUP BY A.bank_id,A.date
+    </select>
+
+</mapper>

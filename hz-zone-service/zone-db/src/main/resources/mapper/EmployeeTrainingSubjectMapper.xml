@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.EmployeeTrainingSubjectMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.EmployeeTrainingSubject">
+        <id column="id" property="id" />
+        <result column="train_date" property="trainDate" />
+        <result column="train_type" property="trainType" />
+        <result column="train_title" property="trainTitle" />
+        <result column="train_content" property="trainContent" />
+        <result column="trainer" property="trainer" />
+        <result column="place" property="place" />
+        <result column="times" property="times" />
+        <result column="test" property="test" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+</mapper>

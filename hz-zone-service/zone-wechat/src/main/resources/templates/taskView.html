@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>任务变动</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your docudoort head meta (for Google search results) and in your feed.xml site description.
+">
+
+    <link rel="stylesheet" href="lib/weui.min.css">
+    <link rel="stylesheet" href="css/jquery-weui.css">
+    <link rel="stylesheet" href="css/demos.css">
+
+    <style>
+        .weui-label {
+            width: 70px;
+        }
+    </style>
+</head>
+
+<body ontouchstart>
+
+
+<header class='demos-header'>
+    <h1 class="demos-title">任务变动详情</h1>
+</header>
+
+
+<div class="weui-cells weui-cells_form">
+
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">变更<br/>类型:</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" readonly="readonly" id="changeType" type="text" th:value="${session.messagePush.changeType}">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">任务<br/>类型:</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" readonly="readonly" id="opType" type="text" th:value="${session.messagePush.opType}">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">任务<br/>日期:</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" readonly="readonly" id="planDayStr" type="text" th:value="${session.messagePush.routeDate}">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">任务<br/>网点:</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" readonly="readonly" id="bank" type="text" th:value="${session.messagePush.bank}">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">任务<br/>设备:</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" readonly="readonly" id="device" type="text" th:value="${session.messagePush.device}">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">加钞<br/>金额:</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" readonly="readonly" id="amount" type="text">
+        </div>
+        <input  id="amountValue" type="hidden" th:value="${session.messagePush.amount}">
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">备注:</label></div>
+        <div class="weui-cell__bd">
+            <input class="weui-input" readonly="readonly" id="desc" type="text" th:value="${session.messagePush.comments}">
+        </div>
+    </div>
+    <div class="weui-msg__extra-area">
+        <div class="weui-footer">
+            <p class="weui-footer__text">Copyright © 2021-2022 金服信息</p>
+        </div>
+    </div>
+</div>
+<a href="javascript:;" class="weui-btn weui-btn_primary" style="width: 95%;margin: 20px auto" onclick="submit()">关闭</a>
+<script src="lib/jquery-2.1.4.js"></script>
+<script src="lib/fastclick.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+        var amount=$("#amountValue").val();
+        var info=amount+"万元";
+        $("#amount").val(info);
+    });
+</script>
+
+<script src="js/jquery-weui.js"></script>
+
+<script>
+    function submit(){
+        WeixinJSBridge.call('closeWindow');//关闭当前页
+    }
+
+
+
+</script>
+</body>
+</html>

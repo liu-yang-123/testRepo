@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.TradeClearTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.TradeClearTask">
+        <id column="id" property="id" />
+        <result column="department_id" property="departmentId" />
+        <result column="bank_id" property="bankId" />
+        <result column="clear_type" property="clearType" />
+        <result column="have_detail" property="haveDetail" />
+        <result column="total_amount" property="totalAmount" />
+        <result column="reality_amount" property="realityAmount" />
+        <result column="task_date" property="taskDate" />
+        <result column="status" property="status" />
+        <result column="comments" property="comments" />
+        <result column="confirm_user" property="confirmUser" />
+        <result column="confirm_time" property="confirmTime" />
+        <result column="cancel_check_user" property="cancelCheckUser" />
+        <result column="cancel_check_time" property="cancelCheckTime" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+</mapper>

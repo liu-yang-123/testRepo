@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: ${DATASOURCE_USERNAME:root}
+    password: ${DATASOURCE_PASSWORD:1234}
+    #url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:192.168.1.151}:${DATASOURCE_PORT:3306}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+#    username: ${DATASOURCE_USERNAME:finservice}
+#    password: ${DATASOURCE_PASSWORD:Abc.123456}
+    
+    #11
+    #url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:192.168.200.11}:${DATASOURCE_PORT:3306}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    #username: ${DATASOURCE_USERNAME:finservice}
+    #password: ${DATASOURCE_PASSWORD:Abc.123456}
+    
+    #11外网地址
+    #url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:115.236.21.154}:${DATASOURCE_PORT:8306}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    #username: ${DATASOURCE_USERNAME:finservice}
+    #password: ${DATASOURCE_PASSWORD:Abc.123456}
+    
+    #12
+    #url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:192.168.200.12}:${DATASOURCE_PORT:3306}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    #username: ${DATASOURCE_USERNAME:finservice}
+    #password: ${DATASOURCE_PASSWORD:Abc.123456}
+
+    #12外网地址
+    #url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:115.236.21.154}:${DATASOURCE_PORT:8307}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    #username: ${DATASOURCE_USERNAME:finservice}
+    #password: ${DATASOURCE_PASSWORD:Abc.123456}
+    
+  servlet:
+    multipart:
+      max-file-size: 512MB
+      max-request-size: 512MB
+    
+services:
+  filepath: 
+    win: D://data/
+    linux: /home/finservice/hz-zone-data/
+  sendpath: 
+    win: D://data/file/
+    linux: /home/finservice/hz-zone-data/file/
+    
+#导入计划单、回款明细类型对应数据库银行id
+importType:
+  hzicbc: 1
+  rcb: 505
+  bob: 601
+  jdicbc: 614

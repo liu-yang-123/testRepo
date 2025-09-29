@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.RouteMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.Route">
+        <id column="id" property="id" />
+        <result column="route_no" property="routeNo" />
+        <result column="route_type" property="routeType" />
+        <result column="vehicle_id" property="vehicleId" />
+        <result column="route_date" property="routeDate" />
+        <result column="plan_begin_time" property="planBeginTime" />
+        <result column="plan_finish_time" property="planFinishTime" />
+        <result column="act_begin_time" property="actBeginTime" />
+        <result column="act_finish_time" property="actFinishTime" />
+        <result column="driver" property="driver" />
+        <result column="security_a" property="securityA" />
+        <result column="security_b" property="securityB" />
+        <result column="route_key_man" property="routeKeyMan" />
+        <result column="route_oper_man" property="routeOperMan" />
+        <result column="follower" property="follower" />
+        <result column="disp_oper_man" property="dispOperMan" />
+        <result column="disp_check_man" property="dispCheckMan" />
+        <result column="disp_time" property="dispTime" />
+        <result column="disp_cfm_time" property="dispCfmTime" />
+        <result column="disp_box_list" property="dispBoxList" />
+        <result column="disp_bag_count" property="dispBagCount" />
+        <result column="hdover_oper_man" property="hdoverOperMan" />
+        <result column="hdover_check_man" property="hdoverCheckMan" />
+        <result column="hdover_time" property="hdoverTime" />
+        <result column="return_box_count" property="returnBoxCount" />
+        <result column="return_bag_count" property="returnBagCount" />
+        <result column="status_t" property="statusT" />
+        <result column="task_total" property="taskTotal" />
+        <result column="task_finish" property="taskFinish" />
+        <result column="comments" property="comments" />
+        <result column="check_user" property="checkUser" />
+        <result column="check_time" property="checkTime" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <update id="updateIncFinishTotal" parameterType="java.util.Map" >
+        update route
+        set task_finish = task_finish + #{inc}
+        where id = #{routeId}
+    </update>
+
+    <!--批量插入数据 -->
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="false">
+        INSERT INTO `route` (`route_no`,`route_name`,`route_number`,`route_type`,`department_id`,`vehicle_id`,`route_date`,
+        `driver`,`security_a`,`security_b`,`route_key_man`,`route_oper_man`,`follower`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.routeNo},#{item.routeName},#{item.routeNumber},#{item.routeType},#{item.departmentId},#{item.vehicleId},
+            #{item.routeDate},#{item.driver},#{item.securityA},#{item.securityB},
+            #{item.routeKeyMan},#{item.routeOperMan},#{item.follower})
+        </foreach>
+    </insert>
+    
+    <select id="getTaskRoute" resultType="java.util.Map">
+    	select id as value,route_no as routeNo,route_name as routeName,route_type as type,status_t as status from route where department_id = #{departmentId} and route_date = #{routeDate}
+    	<if test="bankId != null">
+			and id in (select route_id from atm_task where bank_id = #{bankId} and task_date = #{routeDate} and deleted = 0)
+		</if>
+		<if test="routeType == 0">
+		 	and route_type = #{routeType}
+		</if>
+		<if test="deleted != null">
+		 	and deleted = #{deleted}
+		</if>
+		 order by route_no * 1 asc
+    </select>
+
+    <!-- 时间范围内查询线路编号 -->
+    <select id="getRouteNoList" resultMap="BaseResultMap">
+        SELECT DISTINCT route_no FROM `route` WHERE route_date >= #{start} AND route_date <![CDATA[ < ]]> #{end}
+        AND department_id = #{departmentId} AND deleted = 0
+    </select>
+
+    <!-- 计算线路编号时长最小值、最大值、均值 -->
+    <select id="getMaxMinTime" resultType="com.zcxd.db.model.result.MaxMinResult">
+        SELECT route_no AS `key`,MIN(act_finish_time-disp_time) AS `min`,MAX( act_finish_time - disp_time ) AS `max`,
+               AVG( act_finish_time - disp_time ) AS `average`
+        FROM `route` WHERE route_date >= #{start} AND route_date <![CDATA[ < ]]> #{end} AND department_id = #{departmentId} AND deleted = 0
+              AND disp_time > 0 AND act_finish_time > 0 AND route_no IN
+        <foreach collection="routeNoList" item="routeNo" index="index" open="(" close=")" separator=",">
+            #{routeNo}
+        </foreach>
+        GROUP BY
+            route_no
+    </select>
+
+</mapper>

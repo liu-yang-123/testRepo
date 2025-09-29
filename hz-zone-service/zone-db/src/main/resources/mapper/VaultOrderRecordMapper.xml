@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.VaultOrderRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.VaultOrderRecord">
+        <id column="id" property="id" />
+        <result column="order_id" property="orderId" />
+        <result column="denom_type" property="denomType" />
+        <result column="denom_id" property="denomId" />
+        <result column="amount" property="amount" />
+        <result column="comments" property="comments" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!--批量插入数据 -->
+    <insert id="insertAll" parameterType="java.util.List"  useGeneratedKeys="false">
+        INSERT INTO `vault_order_record` (`order_id`,`denom_type`,`denom_id`,`amount`,`count`,`comments`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.orderId},#{item.denomType},#{item.denomId},#{item.amount},#{item.count},#{item.comments})
+        </foreach>
+    </insert>
+
+    <!-- 获取时间范围内券别 金额 -->
+    <select id="getDenomAmount" resultType="com.zcxd.db.model.result.AtmDenomAmountResult">
+        SELECT  A.denom_id AS denomId, SUM(A.amount) AS taskAmount FROM `vault_order_record` AS A LEFT JOIN `vault_order` AS B ON A.order_id = B.id
+        WHERE B.order_type =#{orderType} AND B.bank_id = #{bankId} AND B.sub_type = #{subType} AND B.order_date >= #{start} AND B.order_date <![CDATA[ <= ]]> #{end}
+        AND B.status_t = 4  GROUP BY A.denom_id
+    </select>
+
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.SchdResultMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.SchdResult">
+        <id column="id" property="id" />
+        <result column="plan_day" property="planDay" />
+        <result column="route_no" property="routeNo" />
+        <result column="route_type" property="routeType" />
+        <result column="vehicle_no" property="vehicleNo" />
+        <result column="driver" property="driver" />
+        <result column="scurity_a" property="scurityA" />
+        <result column="scurity_b" property="scurityB" />
+        <result column="key_man" property="keyMan" />
+        <result column="op_man" property="opMan" />
+        <result column="leader" property="leader" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!--批量插入数据 -->
+    <insert id="insertAll" parameterType="java.util.List"  useGeneratedKeys="false">
+        INSERT INTO `schd_result` (`department_id`,`plan_day`,`route_no`,`route_type`,`vehicle_no`,`driver`,`scurity_a`,`scurity_b`,
+                                   `key_man`,`op_man`,`leader`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.departmentId},#{item.planDay},#{item.routeNo},#{item.routeType},#{item.vehicleNo},#{item.driver},#{item.scurityA},#{item.scurityB},
+             #{item.keyMan},#{item.opMan},#{item.leader})
+        </foreach>
+    </insert>
+    
+    <!--批量修改数据 -->
+    <update id="updateAll" parameterType="java.util.List"  useGeneratedKeys="false">
+        <foreach collection="list" item="item" index="index" separator=";">
+        	update `schd_result`
+        	  <set>
+        	  key_man = #{item.keyMan},
+        	  op_man = #{item.opMan},
+        	  leader = #{item.leader}
+        	  </set>
+        	  where id = #{item.id}
+        </foreach>
+    </update>
+</mapper>

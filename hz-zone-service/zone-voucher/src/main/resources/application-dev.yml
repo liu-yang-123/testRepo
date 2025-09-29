@@ -1,0 +1,41 @@
+#########注册中心配置#####################
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+####配置打印sql
+logging:
+  config: classpath:logback.xml
+  level:
+    com.zcxd.voucher: INFO
+    com.jalja.org.spring: ERROR
+    org.springframework.web: ERROR
+    org.apache.ibatis: INFO
+    java.sql.PreparedStatement: ERROR
+    java.sql.Statement: ERROR
+    Java.sql.Connection: ERROR
+    com.codingapi.txlcn: ERROR
+    com.alibaba.nacos: error
+
+mybatis-plus:
+  # 支持统配符 * 或者 ; 分割
+  type-enums-package: com.zfibs.austway.enums;com.zfibs.austway.enums.*
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+
+#####redis配置
+redis:
+  singleServerConfig:
+    address: "redis://127.0.0.1:6379"
+    password: "zjzcjf"
+
+feign:
+  hystrix:
+    enabled: false
+  client:
+    config:
+      default:
+        connectTimeout: 5000 #单位毫秒,目前设置5s
+        readTimeout: 5000 #单位毫秒

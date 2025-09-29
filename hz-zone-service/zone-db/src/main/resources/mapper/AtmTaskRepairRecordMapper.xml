@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.AtmTaskRepairRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.AtmTaskRepairRecord">
+        <id column="id" property="id" />
+        <result column="route_id" property="routeId" />
+        <result column="atm_task_id" property="atmTaskId" />
+        <result column="atm_id" property="atmId" />
+        <result column="arrive_time" property="arriveTime" />
+        <result column="engineer_arrive_time" property="engineerArriveTime" />
+        <result column="engineer_name" property="engineerName" />
+        <result column="fault_type" property="faultType" />
+        <result column="description" property="description" />
+        <result column="comments" property="comments" />
+        <result column="cashbox_replace" property="cashboxReplace" />
+        <result column="cash_in_box" property="cashInBox" />
+        <result column="deal_comments" property="dealComments" />
+        <result column="finish_time" property="finishTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+</mapper>

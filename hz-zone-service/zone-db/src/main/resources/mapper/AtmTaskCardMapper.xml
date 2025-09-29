@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.AtmTaskCardMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.AtmTaskCard">
+        <id column="id" property="id" />
+        <result column="route_id" property="routeId" />
+        <result column="route_no" property="routeNo" />
+        <result column="task_id" property="taskId" />
+        <result column="atm_id" property="atmId" />
+        <result column="card_no" property="cardNo" />
+        <result column="card_bank" property="cardBank" />
+        <result column="collect_man_a" property="collectManA" />
+        <result column="collect_man_b" property="collectManB" />
+        <result column="collect_time" property="collectTime" />
+        <result column="dispatch_man_a" property="dispatchManA" />
+        <result column="dispatch_man_b" property="dispatchManB" />
+        <result column="dispatch_time" property="dispatchTime" />
+        <result column="deliver_route_id" property="deliverRouteId" />
+        <result column="deliver_route_no" property="deliverRouteNo" />
+        <result column="deliver_bank_id" property="deliverBankId" />
+        <result column="deliver_day" property="deliverDay" />
+        <result column="deliver_type" property="deliverType" />
+        <result column="receiver_idno" property="receiverIdno" />
+        <result column="receiver_name" property="receiverName" />
+        <result column="receive_time" property="receiveTime" />
+        <result column="status_t" property="statusT" />
+        <result column="comments" property="comments" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <select id="getTotal" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM `atm_task_card` AS A LEFT JOIN `atm_device` AS B ON A.atm_id = B.id
+        WHERE A.department_id = #{departmentId} AND A.create_time >= #{start} AND A.create_time <![CDATA[ < ]]> #{end}
+        <if test="terNo != null and terNo != ''">
+            AND B.ter_no  LIKE CONCAT (#{terNo}, '%')
+        </if>
+    </select>
+
+    <!-- 吞没卡列表设备 -->
+    <select id="getList" resultType="com.zcxd.db.model.result.AtmTaskCardResult">
+        SELECT A.*,B.ter_no FROM `atm_task_card` AS A LEFT JOIN `atm_device` AS B ON A.atm_id = B.id
+        WHERE A.department_id = #{departmentId} AND A.create_time >= #{start} AND A.create_time <![CDATA[ < ]]> #{end}
+        <if test="terNo != null and terNo != ''">
+            AND B.ter_no  LIKE CONCAT (#{terNo}, '%')
+        </if>
+        LIMIT #{offset}, #{limit}
+    </select>
+
+</mapper>

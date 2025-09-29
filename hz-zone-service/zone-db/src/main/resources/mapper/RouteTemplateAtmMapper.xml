@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.RouteTemplateAtmMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.RouteTemplateAtm">
+        <id column="id" property="id" />
+        <result column="route_template_id" property="routeTemplateId" />
+        <result column="atm_id" property="atmId" />
+        <result column="sub_bank_id" property="subBankId" />
+        <result column="sort" property="sort" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    
+    <select id="getMaxSort" resultType="java.lang.Long" >
+		select max(sort) from route_template_atm where route_template_id = #{routeTemplateId}
+    </select>
+    
+    <update id="updateSort" >
+		update route_template_atm set sort = sort ${symbol} 1 
+		where route_template_id = #{routeTemplateId} 
+			and sort <![CDATA[ >= ]]> #{beginSort} and sort <![CDATA[ <= ]]> #{endSort}
+    </update>
+    
+    
+    <select id="getRouteTemplateAtmList" resultType="java.util.Map">
+		SELECT
+			rta.id,
+			rta.route_template_id as routeTemplateId,
+			rta.atm_id as atmId,
+			rta.bank_id as headBankId,
+			ad.ter_no as terNo,
+			rta.sub_bank_id as bankId,
+			b.short_name as shortName
+		FROM
+			route_template_atm AS rta
+		INNER JOIN atm_device ad ON rta.atm_id = ad.id
+		INNER JOIN bank b ON rta.sub_bank_id = b.id
+		<where>
+			<if test="bankId != null">
+				(rta.sub_bank_id IN (
+					SELECT
+						id
+					FROM
+						bank
+					WHERE
+						parent_ids LIKE '%/${bankId}/%'
+					)
+				OR rta.sub_bank_id = ${bankId})
+			</if>
+			<if test="routeTemplateId != null">
+				and rta.route_template_id = #{routeTemplateId} 
+			</if>
+		</where>
+		ORDER BY sort ASC
+    </select>
+    
+    
+</mapper>

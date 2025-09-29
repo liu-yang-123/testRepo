@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: sync
+server:
+  port: 8085
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml

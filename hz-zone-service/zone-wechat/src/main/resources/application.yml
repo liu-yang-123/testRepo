@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #      url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    #      username: ${DATASOURCE_USERNAME:finservice}
+    #      password: ${DATASOURCE_PASSWORD:Abc.123456}
+    url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: ${DATASOURCE_USERNAME:finservice}
+    password: ${DATASOURCE_PASSWORD:Abc.123456}
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  thymeleaf:
+    mode: LEGACYHTML5
+    cache: false
+  application:
+    name: wechat
+server:
+  port: 8089
+logging:
+  level:
+    org.springframework.web: INFO
+    wx.mp: DEBUG
+    me.chanjar.weixin: DEBUG
+wx:
+  mp:
+    useRedis: false
+    redisConfig:
+      host: 127.0.0.1
+      port: 6379
+      password: zjzcjf
+    configs:
+#        appId:  wxfeaa7698c7c50663
+#        secret:  e0ff9d1829e8f4a3c05177032c0dc922
+        appId:  wxe9f2e8ce38e56bb3
+        secret:  000670f53cac2bb8b17ae86a6708b5d3  #正式环境APPID
+        token:  WECHATX
+        aesKey:
+        templateId: EYjJlSnxIG3Vqj1xlROnNnTf1Wc4QYxri2in7warg8Y #排班结果模板ID
+        opeatorTempId: EYjJlSnxIG3Vqj1xlROnNnTf1Wc4QYxri2in7warg8Y #人员变动模板ID
+        notify_url:   https://api.zjzcab.com.cn/wechat/weixinComeback  #回调地址
+        host:   https://api.zjzcab.com.cn/wechat/   #服务器地址

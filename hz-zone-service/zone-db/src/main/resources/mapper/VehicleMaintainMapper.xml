@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.VehicleMaintainMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.VehicleMaintain">
+        <id column="id" property="id" />
+        <result column="vehicle_id" property="vehicleId" />
+        <result column="mt_date" property="mtDate" />
+        <result column="mt_type" property="mtType" />
+        <result column="mt_reason" property="mtReason" />
+        <result column="mt_content" property="mtContent" />
+        <result column="mt_cost" property="mtCost" />
+        <result column="mt_result" property="mtResult" />
+        <result column="mt_employee" property="mtEmployee" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+    
+	<select id="findListByPage" resultType="java.util.Map" >
+		SELECT
+			vm.id,
+			vm.mt_date AS mtDate,
+			vm.mt_type AS mtType,
+			vm.mt_reason AS mtReason,
+			vm.mt_content AS mtContent,
+			vm.mt_cost AS mtCost,
+			vm.mt_result AS mtResult,
+			vm.mt_employee AS mtEmployee,
+			vm.vehicle_id AS vehicleId,
+			vm.department_id AS departmentId,
+			e.emp_no AS empNo,
+			e.emp_name AS empName,
+			v.lpno,
+			v.seqno
+		FROM
+			vehicle_maintain AS vm
+		INNER JOIN employee AS e ON vm.mt_employee = e.id
+		INNER JOIN vehicle AS v ON vm.vehicle_id = v.id
+		<where>
+			<if test="lpno != null and lpno != ''">
+				and v.lpno like '%${lpno}%'
+			</if>
+			<if test="seqno != null and seqno != ''">
+				and v.seqno=#{seqno}
+			</if>
+			<if test="mtType != null and mtType != ''">
+				and vm.mt_type = #{mtType}
+			</if>
+			<if test="mtResult != null">
+				and vm.mt_result = #{mtResult}
+			</if>
+			<if test="departmentId != null">
+				and vm.department_id = #{departmentId}
+			</if>
+			<if test="deleted != null">
+				and vm.deleted = #{deleted}
+			</if>
+		</where>
+		order by vm.create_time desc
+	</select>
+</mapper>

@@ -1,0 +1,49 @@
+#########注册中心配置#####################
+spring:
+  cloud:
+      nacos:
+        discovery:
+          server-addr: localhost:8848
+
+#logging:
+#  file:
+#    name: base.log
+#    max-size: 5120KB
+#  level:
+#    root: INFO
+wechat:
+  push: 1
+
+####总平台登录信息
+finservice:
+  url: http://zccc.cbpm-xinda.net:8443/system/auth/login
+  username: hangzhou
+  password: hangzhou123
+
+    ####总平台子系统登录信息
+  area-url: http://zccc.cbpm-xinda.net:8443/system/user/login
+  area-username: 450100001
+  area_password: cbpm2022
+
+####配置打印sql
+logging:
+  config: classpath:logback.xml
+  level:
+    com.zcxd.pda: INFO
+    com.jalja.org.spring: ERROR
+    org.springframework.web: ERROR
+    org.apache.ibatis: INFO
+    java.sql.PreparedStatement: ERROR
+    java.sql.Statement: ERROR
+    Java.sql.Connection: ERROR
+    com.codingapi.txlcn: ERROR
+    com.alibaba.nacos: error
+
+#####redis配置
+redis:
+  singleServerConfig:
+    address: "redis://127.0.0.1:6379"
+    password: "zjzcjf"
+
+swagger:
+  enable: false

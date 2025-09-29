@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.AtmClearErrorMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.AtmClearError">
+        <id column="id" property="id" />
+        <result column="task_id" property="taskId" />
+        <result column="atm_id" property="atmId" />
+        <result column="detail_type" property="detailType" />
+        <result column="denom_id" property="denomId" />
+        <result column="count" property="count" />
+        <result column="amount" property="amount" />
+        <result column="rmb_sn" property="rmbSn" />
+        <result column="create_time" property="createTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!--批量插入数据 -->
+    <insert id="insertAll" parameterType="java.util.List"  useGeneratedKeys="false">
+        INSERT INTO `atm_clear_error` (`task_id`,`atm_id`,`detail_type`,`denom_id`,`count`,`amount`,`rmb_sn`,`create_time`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.taskId},#{item.atmId},#{item.detailType},#{item.denomId},#{item.count},#{item.amount},#{item.rmbSn},#{item.createTime})
+        </foreach>
+    </insert>
+
+    <select id="getCountAmountGroupByType" resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT A.detail_type  AS `key`, COUNT(*) AS count, SUM(amount) AS amount
+        FROM `atm_clear_error` AS A LEFT JOIN `atm_clear_task` AS B ON A.task_id = B.id
+        WHERE B.department_id = #{departmentId} AND B.task_date LIKE CONCAT (#{date}, '%') AND B.deleted = 0
+        AND B.bank_id = #{bankId} GROUP BY A.detail_type
+    </select>
+
+</mapper>

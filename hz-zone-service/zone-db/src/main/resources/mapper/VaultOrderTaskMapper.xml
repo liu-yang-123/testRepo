@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.VaultOrderTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.VaultOrderTask">
+        <id column="id" property="id" />
+        <result column="order_id" property="orderId" />
+        <result column="category" property="category" />
+        <result column="task_id" property="taskId" />
+        <result column="route_id" property="routeId" />
+        <result column="bank_id" property="bankId" />
+        <result column="atm_id" property="atmId" />
+        <result column="denom_id" property="denomId" />
+        <result column="amount" property="amount" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!--批量插入数据 -->
+    <insert id="insertAll" parameterType="java.util.List"  useGeneratedKeys="false">
+        INSERT INTO `vault_order_task` (`order_id`,`category`,`task_id`,`atm_id`,`route_id`,`bank_id`,`denom_id`,`amount`,`create_time`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.orderId},#{item.category},#{item.taskId},#{item.atmId},#{item.routeId},#{item.bankId},
+            #{item.denomId},#{item.amount},#{item.createTime})
+        </foreach>
+    </insert>
+
+</mapper>

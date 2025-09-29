@@ -1,0 +1,38 @@
+#########注册中心配置#####################
+spring:
+  cloud:
+      nacos:
+        discovery:
+          server-addr: 192.168.32.133:8848
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:${DATASOURCE_DBTYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/hz_zoneservice?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: ${DATASOURCE_USERNAME:root}
+    password: ${DATASOURCE_PASSWORD:root}
+#日志打印
+logging:
+  file:
+    name: sync.log
+    max-size: 5120KB
+  level:
+    com.zcxd.sync.mapper : debug
+    root: INFO
+#数据同步配置
+upload:
+  company: 45010001
+  dir:
+    win:
+      tmp: D:/syncdata/upload/temp/
+      zip: D:/syncdata/upload/
+    linux:
+      tmp: /data/upload/temp/
+      zip: /data/upload/
+  #host-url: http://localhost:8013/upload/upload
+  host-url: http://192.168.1.125:8011/upload/upload
+  host-no-file-url: http://192.168.1.125:8011/upload/uploadNullFile
+  #加密保护
+  protect:
+    enable: 1
+    pwd: 77873e0c633549308621916d76831ad5
+  jackson:
+    time-zone: GMT+8

@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: dev,db-dev
+  application:
+    name: base
+server:
+  port: 8082

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.AtmClearTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.AtmClearTask">
+        <id column="id" property="id" />
+        <result column="plan_amount" property="planAmount" />
+        <result column="clear_amount" property="clearAmount" />
+        <result column="clear_type" property="clearType" />
+        <result column="department_id" property="departmentId" />
+        <result column="route_id" property="routeId" />
+        <result column="atm_id" property="atmId" />
+        <result column="bank_id" property="bankId" />
+        <result column="task_date" property="taskDate" />
+        <result column="clear_man" property="clearMan" />
+        <result column="check_man" property="checkMan" />
+        <result column="clear_time" property="clearTime" />
+        <result column="error_type" property="errorType" />
+        <result column="error_amount" property="errorAmount" />
+        <result column="error_reason" property="errorReason" />
+        <result column="error_confirm_man" property="errorConfirmMan" />
+        <result column="comments" property="comments" />
+        <result column="status_t" property="statusT" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!--批量插入数据 -->
+    <insert id="insertAll" parameterType="java.util.List"  useGeneratedKeys="false">
+        INSERT INTO `atm_clear_task` (`plan_amount`,`department_id`,`route_id`,`atm_id`,`bank_id`,`denom_id`,`task_date`,`status_t`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.planAmount},#{item.departmentId},#{item.routeId},#{item.atmId},#{item.bankId},#{item.denomId},#{item.taskDate},#{item.statusT})
+        </foreach>
+    </insert>
+
+    <!-- atm 设备ID 查询数据 -->
+    <select id="getByAtmIds" resultMap="BaseResultMap">
+        SELECT * FROM `atm_clear_task` WHERE `task_date` = #{taskDate} AND `atm_id` IN
+        <foreach item="item" index="index" collection="list" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <!-- 获取线路ID -->
+    <select id="getRouteIds"  resultType="java.util.Map">
+        SELECT DISTINCT route_id FROM `atm_clear_task`  WHERE department_id = #{departmentId} AND task_date =#{taskDate} AND deleted = 0
+    </select>
+
+    <!-- 线路ID查询当天的清分任务数据 -->
+    <select id="getByRoute"  resultMap="BaseResultMap">
+        SELECT * FROM `atm_clear_task` WHERE route_id = #{routeId} AND task_date = #{taskDate} AND deleted = 0
+    </select>
+
+    <!-- 根据银行ID,查询当天的清分任务数据 -->
+    <select id="getByBank" resultMap="BaseResultMap">
+        SELECT * FROM `atm_clear_task` WHERE bank_id = #{bankId} AND task_date = #{taskDate} AND deleted = 0
+    </select>
+
+    <select id="sumClearManTotalAmountByRoute" resultType="java.util.Map">
+        select route_id as routeId,bank_id as bankId, sum(plan_amount) as totalPlan, sum(clear_amount) as totalClear
+        from `atm_clear_task`
+        where clear_time <![CDATA[ >= ]]> #{beginTime} and clear_time <![CDATA[ <= ]]> #{endTime} and clear_man = #{clearMan} and status_t = 1 and deleted = 0 GROUP BY route_id,bank_id;
+    </select>
+
+    <!-- 查询时间段内计划清分总额 -->
+    <select id="getBankCountAmount" resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS count, SUM(plan_amount) AS amount FROM `atm_clear_task` WHERE task_date LIKE CONCAT (#{date}, '%') AND bank_id = #{bankId} AND deleted = 0
+    </select>
+
+    <!-- 查询时间段内清分人员ID列表 -->
+    <select id="getClearManList" resultType="com.zcxd.db.model.result.IdResult">
+        SELECT DISTINCT clear_man AS id FROM `atm_clear_task`
+        WHERE department_id = #{departmentId} AND task_date LIKE CONCAT (#{date}, '%') AND deleted = 0
+    </select>
+
+    <!-- 查询时间段内复核人员ID列表 -->
+    <select id="getCheckManList" resultType="com.zcxd.db.model.result.IdResult">
+        SELECT DISTINCT check_man AS id FROM `atm_clear_task`
+        WHERE department_id = #{departmentId} AND task_date LIKE CONCAT (#{date}, '%') AND deleted = 0
+    </select>
+
+    <!-- 查询某用户时间范围清分总额 -->
+    <select id="getAmountByUser"  resultType="java.math.BigDecimal">
+        SELECT SUM(plan_amount) FROM `atm_clear_task` WHERE department_id = #{departmentId}
+        AND task_date LIKE CONCAT (#{date}, '%') AND deleted = 0 AND ( clear_man = #{id} OR check_man = #{id} )
+    </select>
+
+    <!--查询某用户时间范围清分差错笔数 -->
+    <select id="getErrorCountByUser" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM `atm_clear_task`  WHERE department_id = #{departmentId} AND task_date LIKE CONCAT (#{date}, '%')
+        AND deleted = 0 AND ( clear_man = #{id} OR check_man = #{id} ) AND error_type != 0
+    </select>
+
+    <!-- 查询ATM设备清分金额 -->
+    <select id="getAmountByAtm"  resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT SUM(plan_amount) AS amount, atm_id AS `key` FROM `atm_clear_task` WHERE department_id = #{departmentId} AND atm_id IN
+        <foreach collection="atmIdList" item="atmId" index="index" open="(" close=")" separator=",">
+            #{atmId}
+        </foreach>
+        AND task_date LIKE CONCAT (#{date}, '%') AND deleted = 0
+        GROUP BY atm_id
+    </select>
+
+    <!-- 根据银行查询差错类型的任务总数、任务总金额 -->
+    <select id="getCountAmountByBank" resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS count, SUM(error_amount) AS amount FROM `atm_clear_task`
+        WHERE department_id = #{departmentId} AND task_date LIKE CONCAT (#{date}, '%') AND deleted = 0 AND bank_id = #{bankId}
+        <if test="errorType != null and errorType > -1">
+            AND error_type = #{errorType}
+        </if>
+    </select>
+
+</mapper>

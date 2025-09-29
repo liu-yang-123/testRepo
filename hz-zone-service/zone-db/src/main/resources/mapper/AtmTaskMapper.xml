@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.AtmTaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.AtmTask">
+        <id column="id" property="id" />
+        <result column="task_no" property="taskNo" />
+        <result column="atm_id" property="atmId" />
+        <result column="bank_id" property="bankId" />
+        <result column="sub_bank_id" property="subBankId" />
+        <result column="task_type" property="taskType" />
+        <result column="task_date" property="taskDate" />
+        <result column="route_id" property="routeId" />
+        <result column="carry_route_id" property="carryRouteId" />
+        <result column="import_batch" property="importBatch" />
+        <result column="carry_type" property="carryType" />
+        <result column="amount" property="amount" />
+        <result column="denom_id" property="denomId" />
+        <result column="cashbox_list" property="cashboxList" />
+        <result column="clear_site" property="clearSite" />
+        <result column="backup_flag" property="backupFlag" />
+        <result column="status_t" property="statusT" />
+        <result column="begin_time" property="beginTime" />
+        <result column="end_time" property="endTime" />
+        <result column="repair_plan_time" property="repairPlanTime" />
+        <result column="repair_content" property="repairContent" />
+        <result column="repair_company" property="repairCompany" />
+        <result column="comments" property="comments" />
+        <result column="check_result" property="checkResult" />
+        <result column="check_item_result" property="checkItemResult" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+        <result column="is_out" property="isOut" />
+    </resultMap>
+    <select id="findList" resultType="java.util.Map" >
+        SELECT
+        atmt.id,
+        atmt.atm_id as atmId,
+        atmd.ter_no as terNo,
+        atmt.task_type as taskType,
+        atmt.status_t as statusT,
+        atmt.route_id as routeId,
+        atmt.bank_id as bankId,
+        b.short_name as bankName,
+        atmt.sub_bank_id as bankId,
+        atmt.task_date as taskDate,
+        atmt.begin_time as beginTime,
+        atmt.end_time as endTime,
+        atmt.import_batch as importBatch,
+        atmt.amount,
+        atmt.comments,
+        atmt.check_result as checkResult
+        FROM atm_task atmt
+        INNER JOIN atm_device atmd ON atmt.atm_id = atmd.id
+        INNER JOIN bank b ON atmt.sub_bank_id = b.id
+        <where>
+            <if test="routeId != null">
+	            <if test="routeType == 0">
+	                and atmt.route_id = #{routeId}
+	            </if>
+	            <if test="routeType == 1">
+	                and atmt.carry_route_id = #{routeId}
+	            </if>
+            </if>
+            <if test="bankId != null">
+                and atmt.bank_id = #{bankId}
+            </if>
+            <if test="deleted != null">
+                and atmt.deleted = #{deleted}
+            </if>
+        </where>
+        order by atmt.task_date DESC ,atmt.create_time DESC
+    </select>
+
+    <!-- 根据日期获取，清机加钞任务数据 -->
+    <select id="getAtmCleanTask" resultMap="BaseResultMap">
+        SELECT * FROM `atm_task` WHERE task_date = #{taskDate} AND deleted = 0 AND department_id = #{departmentId} AND task_type = 2
+        <if test="bankId != null and bankId > 0 ">
+            AND bank_id = #{bankId}
+        </if>
+    </select>
+
+    <!-- 银行、任务时间、区域查询ATM加钞任务 -->
+    <select id="getBankTaskList" resultType="com.zcxd.db.model.result.BankAtmTaskResult">
+        SELECT A.id, A.atm_id,A.route_id,A.amount, A.denom_id,B.ter_no FROM `atm_task` AS A  LEFT JOIN atm_device B ON A.atm_id = B.id
+        WHERE A.task_date = #{taskDate} AND A.bank_id = #{bankId}  AND A.department_id = #{departmentId} AND A.status_t != -1
+              AND A.deleted = 0 AND A.task_type = 2 ORDER BY A.route_id DESC
+    </select>
+
+    <select id="getRouteIds" resultType="java.util.Map">
+        SELECT DISTINCT route_id FROM `atm_task` AS A LEFT JOIN bank AS B ON A.bank_id = B.id
+        WHERE B.department_id = #{departmentId} AND A.task_date =#{taskDate} AND task_type in (1,2)
+    </select>
+
+    <!-- 任务ID获取 -->
+    <select id="getDenomAmountList" resultType="com.zcxd.db.model.result.AtmDenomAmountResult">
+        SELECT denom_id,SUM(amount) AS task_amount FROM `atm_task` WHERE id IN
+        <foreach item="item" index="index" collection="list" open="("  close=")" separator=",">
+            #{item}
+        </foreach>
+        GROUP BY denom_id
+    </select>
+
+    <!-- 根据类型、时间范围查询任务数量，按任务类型分组 -->
+    <select id="getNumberGroupByType" resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS `count`, task_type AS `key` FROM `atm_task` WHERE task_date >= #{start} AND task_date <![CDATA[ < ]]> #{end}
+        AND bank_id = #{bankId} AND deleted = 0 AND status_t = 2 GROUP BY task_type
+    </select>
+
+    <!--根据状态、时间范围查询数量 -->
+    <select id="getStatusNumber" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM `atm_task` WHERE task_date >= #{start} AND task_date <![CDATA[ < ]]> #{end}
+          AND bank_id = #{bankId} AND deleted = 0 AND status_t = #{status}
+    </select>
+
+    <!-- 获取加钞银行机构券别 -->
+    <select id="getBankDenomList" resultMap="BaseResultMap">
+        SELECT DISTINCT denom_id,bank_id FROM `atm_task` WHERE task_date >= #{start}
+        AND task_date <![CDATA[ < ]]> #{end} AND department_id = #{departmentId} AND deleted = 0 AND task_type = 2 GROUP BY bank_id,denom_id
+    </select>
+
+    <!-- 根据时间范围查询某一任务类型 券别、银行的任务数量、金额 -->
+    <select id="getTypeCountAmount"  resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS count, SUM(amount) AS amount FROM `atm_task` WHERE task_date >= #{start} AND task_date <![CDATA[ < ]]> #{end}
+        AND deleted = 0 AND bank_id = #{bankId} AND denom_id = #{denomId} AND task_type = #{type} AND status_t = 2
+    </select>
+
+    <!-- 根据时间范围查询某一任务状态 券别、银行的任务数量、金额 -->
+    <select id="getStatusCountAmount"  resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS count, SUM(amount) AS amount FROM `atm_task` WHERE task_date >= #{start} AND task_date <![CDATA[ < ]]> #{end}
+        AND deleted = 0 AND bank_id = #{bankId} AND denom_id = #{denomId} AND status_t = #{status}
+    </select>
+
+    <!-- 查询时间段内所有任务类型密码人员ID列表 -->
+    <select id="getOpManList" resultType="com.zcxd.db.model.result.IdResult">
+        SELECT DISTINCT clean_op_man_id AS id FROM `atm_task`
+        WHERE department_id = #{departmentId} AND task_date >= #{start} AND task_date <![CDATA[ < ]]> #{end} AND deleted = 0
+    </select>
+
+    <!-- 查询时间段内所有任务类型钥匙人员ID列表 -->
+    <select id="getKeyManList" resultType="com.zcxd.db.model.result.IdResult">
+        SELECT DISTINCT clean_key_man_id AS id FROM `atm_task`
+        WHERE department_id = #{departmentId}  AND task_date >= #{start} AND task_date <![CDATA[ < ]]> #{end} AND deleted = 0
+    </select>
+
+    <!-- 查询某用户时间范围加款总额 -->
+    <select id="getAmountByUsersOpMan" resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT SUM(amount) AS amount,clean_op_man_id AS `key` FROM `atm_task` WHERE department_id = #{departmentId} AND task_type = #{taskType}
+        AND task_date >= #{start} AND task_date <![CDATA[ < ]]> #{end} AND status_t = 2 AND clean_op_man_id IN
+        <foreach collection="empIdList" item="empId" index="index" open="(" close=")" separator=",">
+            #{empId}
+        </foreach>
+        GROUP BY clean_op_man_id
+    </select>
+
+    <select id="getAmountByUsersKeyMan" resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT SUM(amount) AS amount,clean_key_man_id AS `key` FROM `atm_task` WHERE department_id = #{departmentId} AND task_type = #{taskType}
+        AND task_date >= #{start} AND task_date <![CDATA[ < ]]> #{end} AND status_t = 2 AND clean_key_man_id IN
+        <foreach collection="empIdList" item="empId" index="index" open="(" close=")" separator=",">
+            #{empId}
+        </foreach>
+        GROUP BY clean_key_man_id
+    </select>
+
+
+    <!-- 查询某用户时间范围加款任务数 -->
+    <select id="getCountByUsersOpMan"  resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS count, clean_op_man_id AS `key` FROM `atm_task` WHERE department_id = #{departmentId} AND task_type = #{taskType}
+        AND task_date >= #{start}  AND task_date <![CDATA[ < ]]> #{end} AND status_t = 2 AND  clean_op_man_id IN
+        <foreach collection="empIdList" item="empId" index="index" open="(" close=")" separator=",">
+            #{empId}
+        </foreach>
+        GROUP BY clean_op_man_id
+    </select>
+    <!-- 查询某用户时间范围加款任务数 -->
+    <select id="getCountByUsersKeyMan"  resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS count, clean_key_man_id AS `key` FROM `atm_task` WHERE department_id = #{departmentId} AND task_type = #{taskType}
+        AND task_date >= #{start}  AND task_date <![CDATA[ < ]]> #{end} AND status_t = 2 AND  clean_key_man_id IN
+        <foreach collection="empIdList" item="empId" index="index" open="(" close=")" separator=",">
+            #{empId}
+        </foreach>
+        GROUP BY clean_key_man_id
+    </select>
+
+
+    <!-- 查询天数 -->
+    <select id="getDaysByUser" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM (
+            SELECT FROM_UNIXTIME( task_date / 1000, '%Y-%m-%d' ) AS days FROM `atm_task`
+            WHERE department_id = #{departmentId} AND task_date >= #{start}
+            AND task_date <![CDATA[ < ]]> #{end} AND deleted = 0 AND ( clean_op_man_id = #{id} OR clean_key_man_id = #{id} )
+        GROUP BY days) AS A
+    </select>
+
+    <!-- 查询某用户时间范围任务数数 -->
+    <select id="getCountByAtm"  resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS count, atm_id AS `key` FROM `atm_task` WHERE department_id = #{departmentId}
+         AND task_date >= #{start}  AND task_date <![CDATA[ < ]]> #{end} AND status_t = 2 AND atm_id IN
+        <foreach collection="atmIdList" item="atmId" index="index" open="(" close=")" separator=",">
+            #{atmId}
+        </foreach>
+         <if test="taskType != null and taskType > 0">
+             AND task_type = #{taskType}
+         </if>
+         GROUP BY atm_id
+    </select>
+
+    <!-- 查询某用户时间范围任务金额 -->
+    <select id="getAmountByAtm"  resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT SUM(amount) AS `amount`, atm_id AS `key` FROM `atm_task` WHERE department_id = #{departmentId}
+        AND task_date >= #{start}  AND task_date <![CDATA[ < ]]> #{end} AND status_t = 2 AND atm_id IN
+        <foreach collection="atmIdList" item="atmId" index="index" open="(" close=")" separator=",">
+            #{atmId}
+        </foreach>
+        <if test="taskType != null and taskType > 0">
+            AND task_type = #{taskType}
+        </if>
+        GROUP BY atm_id
+    </select>
+
+    <select id="getDaysByRoute" resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS count, A.route_no AS `key` FROM (
+        SELECT FROM_UNIXTIME( C.task_date / 1000, '%Y-%m-%d' ) AS days, D.route_no FROM `atm_task` AS C LEFT JOIN `route` AS D
+        ON C.carry_route_id = D.id WHERE C.department_id = #{departmentId} AND C.task_date >= #{start}
+        AND C.task_date <![CDATA[ < ]]> #{end} AND C.deleted = 0 AND C.status_t = 2 AND D.route_no IN
+        <foreach collection="routeNoList" item="routeNo" index="index" open="(" close=")" separator=",">
+            #{routeNo}
+        </foreach>
+        GROUP BY days,route_no ) AS A  GROUP BY A.route_no
+    </select>
+
+    <select id="getCountByRoute"  resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT COUNT(*) AS count, B.route_no AS `key` FROM `atm_task` AS A LEFT JOIN `route` AS B ON A.carry_route_id = B.id
+        WHERE A.department_id = #{departmentId} AND A.status_t != -1 AND B.route_no IN
+        <foreach collection="routeNoList" item="routeNo" index="index" open="(" close=")" separator=",">
+            #{routeNo}
+        </foreach>
+        AND A.task_date >= #{start} AND A.task_date <![CDATA[ < ]]> #{end} AND A.deleted = 0 GROUP BY B.route_no
+    </select>
+
+    <!-- 求每台任务执行平均时长（毫秒） -->
+    <select id="getAvgTimeByRoute" resultType="com.zcxd.db.model.result.CountAmountResult">
+        SELECT AVG(A.end_time - A.begin_time) / 60000 AS amount, B.route_no AS `key`
+        FROM `atm_task` AS A LEFT JOIN `route` AS B ON A.carry_route_id = B.id
+        WHERE A.department_id = #{departmentId} AND A.begin_time > 0 AND A.task_date >= #{start}
+        AND A.task_date <![CDATA[ < ]]> #{end} AND A.deleted = 0 AND A.status_t = 2 AND B.route_no IN
+        <foreach collection="routeNoList" item="routeNo" index="index" open="(" close=")" separator=",">
+            #{routeNo}
+        </foreach>
+       GROUP BY B.route_no
+    </select>
+    
+</mapper>

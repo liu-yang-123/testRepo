@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: gateway-hz
+server:
+  port: 8081
+  tomcat:
+    uri-encoding: UTF-8
+    max-http-form-post-size: -1

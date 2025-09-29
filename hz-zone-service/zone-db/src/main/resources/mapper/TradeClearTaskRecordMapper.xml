@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.TradeClearTaskRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.TradeClearTaskRecord">
+        <id column="id" property="id" />
+        <result column="department_id" property="departmentId" />
+        <result column="task_id" property="taskId" />
+        <result column="denom_id" property="denomId" />
+        <result column="gb_flag" property="gbFlag" />
+        <result column="amount" property="amount" />
+        <result column="count" property="count" />
+        <result column="comments" property="comments" />
+        <result column="create_time" property="createTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+    
+        <!--批量插入数据 -->
+    <insert id="insertAll" parameterType="java.util.List"  useGeneratedKeys="false">
+        INSERT INTO `trade_clear_task_record` (`task_id`,`denom_id`,`gb_flag`,`amount`,`count`,`comments`)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.taskId},#{item.denomId},#{item.gbFlag},#{item.amount},#{item.count},#{item.comments})
+        </foreach>
+    </insert>
+
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.DeviceMaintainMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.DeviceMaintain">
+        <id column="id" property="id" />
+        <result column="device_id" property="deviceId" />
+        <result column="mt_date" property="mtDate" />
+        <result column="mt_type" property="mtType" />
+        <result column="mt_reason" property="mtReason" />
+        <result column="mt_content" property="mtContent" />
+        <result column="mt_cost" property="mtCost" />
+        <result column="mt_result" property="mtResult" />
+        <result column="mt_engineer" property="mtEngineer" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 查询总数 -->
+    <select id="findTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM `device_maintain` AS A
+        LEFT JOIN `device` AS B ON A.device_id = B.id
+        <where>
+            <if test="departmentId != null and departmentId !=''">
+                AND B.department_id = #{departmentId}
+            </if>
+            <if test="deviceNo != null and deviceNo !=''">
+                AND B.device_no LIKE CONCAT('%',#{deviceNo},'%')
+            </if>
+            <if test="mtEngineer != null and mtEngineer != ''">
+                AND A.mt_engineer LIKE CONCAT('%',#{mtEngineer},'%')
+            </if>
+            <if test="mtType != null and mtType != ''">
+                AND A.mt_type = #{mtType}
+            </if>
+            <if test="mtResult != null">
+                AND A.mt_result = #{mtResult}
+            </if>
+        </where>
+    </select>
+
+    <!-- 条件查询,查询列表数据 -->
+    <select id="findListByCondition" resultType="java.util.Map">
+        SELECT A.*,B.device_no FROM `device_maintain` AS A
+        LEFT JOIN `device` AS B ON A.device_id = B.id
+        <where>
+            <if test="departmentId != null and departmentId !=''">
+                AND B.department_id = #{departmentId}
+            </if>
+            <if test="deviceNo != null and deviceNo !=''">
+                AND B.device_no LIKE CONCAT('%',#{deviceNo},'%')
+            </if>
+            <if test="mtEngineer != null and mtEngineer != ''">
+                AND A.mt_engineer LIKE CONCAT('%',#{mtEngineer},'%')
+            </if>
+            <if test="mtType != null and mtType != ''">
+                AND A.mt_type = #{mtType}
+            </if>
+            <if test="mtResult != null">
+                AND A.mt_result = #{mtResult}
+            </if>
+        </where>
+        LIMIT ${(page - 1)*pageSize}, #{pageSize}
+    </select>
+
+</mapper>

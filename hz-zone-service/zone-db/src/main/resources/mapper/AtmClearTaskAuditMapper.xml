@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.AtmClearTaskAuditMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.AtmClearTaskAudit">
+        <id column="id" property="id" />
+        <result column="clear_task_id" property="clearTaskId" />
+        <result column="plan_amount" property="planAmount" />
+        <result column="clear_amount" property="clearAmount" />
+        <result column="clear_type" property="clearType" />
+        <result column="department_id" property="departmentId" />
+        <result column="route_id" property="routeId" />
+        <result column="atm_id" property="atmId" />
+        <result column="bank_id" property="bankId" />
+        <result column="task_date" property="taskDate" />
+        <result column="clear_man" property="clearMan" />
+        <result column="check_man" property="checkMan" />
+        <result column="clear_time" property="clearTime" />
+        <result column="error_type" property="errorType" />
+        <result column="error_amount" property="errorAmount" />
+        <result column="error_reason" property="errorReason" />
+        <result column="error_confirm_man" property="errorConfirmMan" />
+        <result column="comments" property="comments" />
+        <result column="status_t" property="statusT" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+</mapper>

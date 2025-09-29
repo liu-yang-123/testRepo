@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.BoxpackMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.Boxpack">
+        <id column="id" property="id" />
+        <result column="box_no" property="boxNo" />
+        <result column="box_name" property="boxName" />
+        <result column="box_type" property="boxType" />
+        <result column="bank_id" property="bankId" />
+        <result column="share_bank_id" property="shareBankId" />
+        <result column="rfid" property="rfid" />
+        <result column="comments" property="comments" />
+        <result column="status_t" property="statusT" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 机构、箱包编号查询数据-->
+    <select id="getByNo" resultMap="BaseResultMap">
+        SELECT * FROM `boxpack` WHERE box_no = #{boxNo} AND deleted = 0
+        <if test="id != null and id > 0">
+            AND id NOT IN (#{id})
+        </if>
+        LIMIT 1
+    </select>
+
+    <!-- rfid查询数据 -->
+    <select id="getByRfid" resultMap="BaseResultMap">
+        SELECT * FROM `boxpack` WHERE rfid = #{rfid} AND deleted = 0
+        <if test="id != null and id > 0">
+            AND id NOT IN (#{id})
+        </if>
+        LIMIT 1
+    </select>
+
+</mapper>

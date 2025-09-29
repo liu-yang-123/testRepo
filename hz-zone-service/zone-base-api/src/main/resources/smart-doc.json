@@ -1,0 +1,13 @@
+{
+  "serverUrl": "http://127.0.0.1:8081/base",
+  "outPath": "target/doc",
+  "packageFilters": "com.zcxd.base.controller.*",
+  "requestHeaders": [{
+    "name": "X-Token",
+    "type": "string",
+    "desc": "Token字符串",
+    "value":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZXhwIjoxNjQyMDU1NTYwfQ.ZzQdMbYff5qLhh7577Db-6qZFiH7_BmkZF6FcthwJg0",
+    "required": true,
+    "since": "-"
+     }]
+}

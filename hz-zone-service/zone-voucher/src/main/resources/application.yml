@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: voucher
+server:
+  port: 8086

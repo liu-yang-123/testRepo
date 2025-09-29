@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.gun.db.mapper.GunMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.gun.db.model.Gun">
+<!--        <id column="id" property="id" />-->
+<!--        <result column="gun_code" property="gunCode" />-->
+<!--        <result column="gun_licence_num" property="gunLicenceNum" />-->
+<!--        <result column="internal_num" property="internalNum" />-->
+<!--        <result column="buy_date" property="buyDate" />-->
+<!--        <result column="gun_type" property="gunType" />-->
+<!--        <result column="gun_status" property="gunStatus" />-->
+<!--        <result column="remark" property="remark" />-->
+<!--        <result column="user_count" property="userCount" />-->
+<!--        <result column="is_clean" property="isClean" />-->
+<!--        <result column="is_check" property="isCheck" />-->
+<!--        <result column="clean_date" property="cleanDate" />-->
+<!--        <result column="check_date" property="checkDate" />-->
+<!--        <result column="operator_name" property="operatorName" />-->
+<!--        <result column="create_user" property="createUser" />-->
+<!--        <result column="create_time" property="createTime" />-->
+<!--        <result column="update_user" property="updateUser" />-->
+<!--        <result column="update_time" property="updateTime" />-->
+<!--        <result column="deleted" property="deleted" />-->
+    </resultMap>
+
+</mapper>

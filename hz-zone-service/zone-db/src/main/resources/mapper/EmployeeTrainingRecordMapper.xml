@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcxd.db.mapper.EmployeeTrainingRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zcxd.db.model.EmployeeTrainingRecord">
+        <id column="id" property="id" />
+        <result column="emp_id" property="empId" />
+        <result column="train_id" property="trainId" />
+        <result column="score" property="score" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+    
+	<select id="findListByPage" resultType="java.util.Map" >
+			SELECT
+				etr.id,
+				etr.score,
+				etr.emp_id AS empId,
+				etr.train_id AS trainId,
+				e.emp_no AS empNo,
+				e.emp_name AS empName,
+				ets.train_date AS trainDate,
+				ets.train_title AS trainTitle
+			FROM
+				employee_training_record etr
+			INNER JOIN employee e ON etr.emp_id = e.id
+			INNER JOIN employee_training_subject ets ON etr.train_id = ets.id
+			<where>
+				<if test="empNo != null and empNo != ''">
+					and e.emp_no=#{empNo}
+				</if>
+				<if test="empName != null and empName != ''">
+					and e.emp_name like '%${empName}%'
+				</if>
+				<if test="trainTitle != null and trainTitle != ''">
+					and ets.train_title like '%${trainTitle}%'
+				</if>
+				<if test="deleted != null">
+					and ets.deleted = #{deleted}
+				</if>
+			</where>
+			order by etr.create_time desc
+		</select>
+		
+		
+     <insert id ="insertBatch" parameterType="java.util.List" >
+           insert into employee_training_record
+           (emp_id, train_id, score, create_user, create_time, update_user, update_time)
+           values
+            <foreach collection ="employeeTrainingRecords" item="employeeTrainingRecord" separator =",">
+                (
+                #{employeeTrainingRecord.empId}, #{employeeTrainingRecord.trainId},
+                #{employeeTrainingRecord.score},
+                #{employeeTrainingRecord.createUser},#{employeeTrainingRecord.createTime},
+                #{employeeTrainingRecord.updateUser}, #{employeeTrainingRecord.updateTime}
+                )
+            </foreach >
+     </insert >
+</mapper>

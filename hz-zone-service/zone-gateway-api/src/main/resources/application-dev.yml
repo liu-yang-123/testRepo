@@ -1,0 +1,68 @@
+#########网关路由配置、注册中心配置#####################
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            #这里有个allowCredentials: true这个东西是设置允许访问携带cookie的，这点一定要和前端对应！
+            allowCredentials: true
+            #可以填写多个域名用","隔开 例如："http://www.xiaolc.cn,https://spring.io"  "*"代表允许所有
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            exposedHeaders: "Authorization"
+
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: false
+      routes:
+        - id: base    #路由id，需要全局统一
+          uri: lb://base:8082  #路由到对应服务的地址
+          predicates:
+            - Path=/base/**  #断言，匹配规则，ant匹配
+          filters:
+            - StripPrefix=1
+        - id: pda   #路由id，需要全局统一
+          uri: lb://pda:8083  #路由到对应服务的地址
+          predicates:
+            - Path=/pda/**  #断言，匹配规则，ant匹配
+          filters:
+            - StripPrefix=1
+        - id: gun    #路由id，需要全局统一
+          uri: lb://gun:8085  #路由到对应服务的地址
+          predicates:
+            - Path=/gun/**  #断言，匹配规则，ant匹配
+          filters:
+            - StripPrefix=1
+        - id: voucher    #路由id，需要全局统一
+          uri: lb://voucher:8086  #路由到对应服务的地址
+          predicates:
+            - Path=/voucher/**  #断言，匹配规则，ant匹配
+          filters:
+            - StripPrefix=1
+        - id: wechat
+          uri: lb://wechat:8089
+          predicates:
+            - Path=/wechat/**
+    nacos:
+      discovery:
+        server-addr:localhost:8848
+logging:
+  file:
+    name: gateway.log
+    max-size: 5120KB
+  level:
+    root: INFO
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000 #单位毫秒,目前设置5s
+        readTimeout: 5000 #单位毫秒
+encrypt:
+  aes: 1
+  key: "ZCXDHZZCZHJHMKEY"
+
+
